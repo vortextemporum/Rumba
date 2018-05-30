@@ -227,12 +227,18 @@ def doubleSpiral(n):
         d -= 2
     return seq1.sequence, seq2.sequence
 
-def Square(n):
-    pass
+def Square(n, corner=4):
+    seq = Grid(x=0,y=0,addToList=True,direction=6)
+    
+    for i in range(corner):
+        seq.turn(2,n-1)
+    
+    return seq
+
 
 def Spiral(n):
 
-    seq = Friend(x=-1,y=0,addFirst=False,direction=6)
+    seq = Grid(x=-1,y=0,addToList=False,direction=6)
     
     for newn in range(rows, 2, -2):
         seq.turn(2, newn)
@@ -260,9 +266,55 @@ def Shuffle(n):
 
 
 def Karo(n):
+    seq = Grid(x=int(n/2)-1, y=0, addToList=False, direction= 7)
+    
+    
+    if n % 2 == 0:
+        for i in range(n/2-1, 0, -1):
+            seq.turn(1,2)
+            seq.turn(1,i)
+            seq.turn(1,1)
+            seq.turn(1,i)
+            seq.turn(1,1)
+            seq.turn(1,i)
+            seq.turn(1,1)
+            seq.turn(1,i-1)
+    elif n % 2 == 1:
+        for i in range(int(n/2),0,-1):
+            seq.turn(1,1)
+            seq.turn(1,i)
+            seq.turn(1,i)
+            if i != 1:
+                seq.turn(1,i-1)
+            else:
+                seq.turn(1,i)
+            seq.turn(3,1)
+
+    return seq
+
+'''
+ADD ODD NUMBER
+'''
+        
+def Z(n=5, corners = 3):
+
+    seq = Grid(x=0,y=0,addToList=True,direction=5)
+
+    for i in range(corners):
+        if i % 4 == 0 or i % 4 == 1:
+            seq.turn(3, n - 1)
+        if i % 4 == 2 or i % 4 == 3: 
+            seq.turn(5, n - 1)
+
+    return seq
+
+def Snake(n):
+  
+    seq = Grid()
+    seq.turn(2,1)
+    seq.turn(2,n-1)
     pass
-    
 
-    
+def LetterB(n):
 
-
+    pass
