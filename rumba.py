@@ -1,5 +1,6 @@
-import random
 from moviepy.editor import *
+import random
+
 
 class Grid():
     '''
@@ -113,7 +114,7 @@ YO YO YO YO YO YO YO YO YO YO YO
         '''
         # Question: Shall I change the name to move() ? 
         if steps <= 0:
-            break
+            return
 
         self.directionIndex = (self.directionIndex + direction) % 8
         
@@ -194,18 +195,18 @@ YO YO YO YO YO YO YO YO YO YO YO
         self.y = self.starty
         
         if self.addToList:
-            self.sequence = [[x,y]]
+            self.sequence = [[self.x,self.y]]
         else:
             self.sequence = []
         
         # print("resetted to:" + [self.startx,self.starty])
-        return [self.x,self.y]
+        # return [self.x,self.y]
 
     def scaleToVideo(self, rows=1, resolution=[1280,720]):
         # Not tested
         self.video_resolution = resolution
-        self.cell_x = float(self.resolution[0] / self.rows)
-        self.cell_y = float(self.resolution[1] / self.rows)
+        self.cell_x = float(self.video_resolution[0] / rows)
+        self.cell_y = float(self.video_resolution[1] / rows)
         self.cell_size = [self.cell_x,self.cell_y]
         self.scaled_sequence = []
 
@@ -213,18 +214,18 @@ YO YO YO YO YO YO YO YO YO YO YO
             position = [self.cell_x * couple[0], self.cell_y * couple[1]]
             self.scaled_sequence.append(position)
     
-    def testPattern(output="", length = 1, offset=0.1):
+    def testPattern(self, output="", length = 1, offset=0.1):
         '''
         Won't work with doubleSpiral,
         '''
         # Not tested
         duration = offset * length
         start = 0.0
-        clip = ColorClip(size=composition1.cell_size, color=(0,255,0), duration=duration)
+        clip = ColorClip(size=self.cell_size, color=(0,255,0), duration=duration)
         final_score = []
 
         for i in range(len(self.scaled_sequence)):
-            final = clip.set_position(self.scaled_sequence[i]).set_start(start))
+            final = clip.set_position(self.scaled_sequence[i]).set_start(start)
             final_score.append(final)
             start += offset
 
@@ -271,13 +272,13 @@ def Spiral(n):
     # Not Tested
     seq = Grid(x=-1,y=0,addToList=False,direction=6)
     
-    for newn in range(rows, 2, -2):
+    for newn in range(n, 2, -2):
         seq.turn(2, newn)
         seq.turn(2, newn-1)
         seq.turn(2, newn-1)
         seq.turn(2, newn-2)
     
-    if rows % 2 == 1:
+    if n % 2 == 1:
         seq.turn(2,1)
 
     return seq
@@ -337,7 +338,7 @@ def Z(n=5, corners = 3):
 
 def Snake(n, repeat=1):
      # Not Tested
-    seq = Grid(x=0,y=-1, addToList=False  direction=4)
+    seq = Grid(x=0,y=-1, addToList=False, direction=4)
 
     for i in range(repeat):
         for column in range(n):
