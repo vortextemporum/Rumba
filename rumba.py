@@ -1,5 +1,5 @@
 import random
-
+from moviepy.editor import *
 
 class Grid():
     '''
@@ -23,6 +23,9 @@ YO YO YO YO YO YO YO YO YO YO YO
             self.sequence = [[x,y]]
         else:
             self.sequence = [] 
+
+        self.scaled_sequence = []
+
 
     def addPosition(self, x=1, y=1, addToList=True, direction=None):
         self.x = x
@@ -98,17 +101,17 @@ YO YO YO YO YO YO YO YO YO YO YO
         Grid.currentDirection ==> "moveDown"
 
         Hint:       
-        0° =   + 0
-        45° =  + 1
-        90° =  + 2
+        0° =   + 0 -> Forward
+        45° =  + 1 
+        90° =  + 2 -> Right
         135° = + 3
-        180° = + 4
+        180° = + 4 -> Back
         225° = + 5
-        270° = + 6
+        270° = + 6 -> Left
         315° = + 7
-        360° = + 8
+        360° = + 8 -> Forward again
         '''
-
+        # Question: Shall I change the name to move() ? 
         if steps <= 0:
             break
 
@@ -197,30 +200,40 @@ YO YO YO YO YO YO YO YO YO YO YO
         
         # print("resetted to:" + [self.startx,self.starty])
         return [self.x,self.y]
-    
-class convertSequence(object):
-    
-    def __init__(self, sequence, rows=1, resolution=[1280,720]):
-        
-        self.rows = rows
-        self.sequence = sequence
-        self.resolution = resolution 
-        self.cell_size = [self.resolution[0] / self.rows, self.resolution[1] / self.rows]
 
-        self.cell_x = self.cell_size[0]
-        self.cell_y = self.cell_size[1]
-        self.converted_sequence = []
+    def scaleToVideo(self, rows=1, resolution=[1280,720]):
+        # Not tested
+        self.video_resolution = resolution
+        self.cell_x = float(self.resolution[0] / self.rows)
+        self.cell_y = float(self.resolution[1] / self.rows)
+        self.cell_size = [self.cell_x,self.cell_y]
+        self.scaled_sequence = []
 
-    def scale_sequence(self):
         for couple in self.sequence:
-            pos = [self.cell_x * couple[0], self.cell_y * couple[1]]
-            self.converted_sequence.append(pos)
-        return self.converted_sequence
+            position = [self.cell_x * couple[0], self.cell_y * couple[1]]
+            self.scaled_sequence.append(position)
+    
+    def testPattern(output="", length = 1, offset=0.1):
+        '''
+        Won't work with doubleSpiral,
+        '''
+        # Not tested
+        duration = offset * length
+        start = 0.0
+        clip = ColorClip(size=composition1.cell_size, color=(0,255,0), duration=duration)
+        final_score = []
+
+        for i in range(len(self.scaled_sequence)):
+            final = clip.set_position(self.scaled_sequence[i]).set_start(start))
+            final_score.append(final)
+            start += offset
+
+        finalvideo = CompositeVideoClip(final_score,self.video_resolution)
+        finalvideo.fps= 30
+
+        finalvideo.write_videofile(output)
 
 
-    def round_cellsize(self):
-        self.cell_size[0] = round(self.cell_size[0])
-        self.cell_size[1] = round(self.cell_size[1])
 
 
 ''' 
