@@ -27,16 +27,6 @@ YO YO YO YO YO YO YO YO YO YO YO
 
         self.scaled_sequence = []
 
-
-    def addPosition(self, x=1, y=1, addToList=True, direction=None):
-        self.x = x
-        self.y = y
-
-        if direction.isnumeric():
-            self.directionIndex = direction
-        
-        if self.addToList:
-            self.sequence.append([self.x,self.y])
         
     def moveLeft(self, steps=1, jump=1):
         for i in range(steps):
@@ -120,6 +110,15 @@ YO YO YO YO YO YO YO YO YO YO YO
         
         return getattr(self, self.directionList[self.directionIndex])(steps)
     
+    def addPosition(self, x=0, y=0, addToList=True, direction=None):
+        self.x = x
+        self.y = y
+        
+        if isinstance(direction,int):
+            self.directionIndex = direction
+        
+        if addToList == True:
+            self.sequence.append([self.x,self.y])
     # MIRRORS
     
     
@@ -185,7 +184,7 @@ YO YO YO YO YO YO YO YO YO YO YO
 
     def shuffle(self):
          # Not Tested
-        self.sequence = random.shuffle(self.sequence)
+        random.shuffle(self.sequence)
     
     def reset(self):
 
@@ -205,8 +204,8 @@ YO YO YO YO YO YO YO YO YO YO YO
     def scaleToVideo(self, rows=1, resolution=[1280,720]):
         # Not tested
         self.video_resolution = resolution
-        self.cell_x = float(self.video_resolution[0] / rows)
-        self.cell_y = float(self.video_resolution[1] / rows)
+        self.cell_x = round(float(self.video_resolution[0] / rows))
+        self.cell_y = round(float(self.video_resolution[1] / rows))
         self.cell_size = [self.cell_x,self.cell_y]
         self.scaled_sequence = []
 
@@ -287,22 +286,28 @@ def Regular(n):
      # Not Tested
     seq = Grid(addToList=False)
 
-    for column in range (n):
+    for column in range(n):
+        #print(column)
         for row in range(n):
-            seq.addPosition(row,column)
+            #print(row)
+            seq.addPosition(row, column)
+            #print(seq.currentPosition)
+
     return seq
 
 def Shuffle(n):
      # Not Tested
-    return Regular(n).shuffle
+    s = Regular(n)
+    s.shuffle()
+    return s
 
 
 def Karo(n):
      # Not Tested
-    seq = Grid(x=int(n/2)-1, y=0, addToList=False, direction=7)
+    seq = Grid(x=n//2-1, y=0, addToList=False, direction=7)
     
     if n % 2 == 0:
-        for i in range(n/2-1, 0, -1):
+        for i in range(n//2-1, 0, -1):
             seq.turn(1,2)
             seq.turn(1,i)
             seq.turn(1,1)
@@ -312,7 +317,7 @@ def Karo(n):
             seq.turn(1,1)
             seq.turn(1,i-1)
     elif n % 2 == 1:
-        for i in range(int(n/2),0,-1):
+        for i in range(n//2,0,-1):
             seq.turn(1,1)
             seq.turn(1,i)
             seq.turn(1,i)
@@ -343,11 +348,11 @@ def Snake(n, repeat=1):
     for i in range(repeat):
         for column in range(n):
             
-            if i % 2 == 0:
+            if column % 2 == 0:
                 seq.turn(6,1)
                 seq.turn(6,n-1)
 
-            elif i % 2 == 1:
+            elif column % 2 == 1:
                 seq.turn(2,1)
                 seq.turn(2,n-1)
 
