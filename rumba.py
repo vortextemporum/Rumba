@@ -149,42 +149,66 @@ YO YO YO YO YO YO YO YO YO YO YO
     #SEQUENCE TRANSFORMATIONS
 
 
-    def mirrorXAll(self, row):
+    def mirrorXAll(self, row, show=False):
         for couple in self.sequence:
             couple[0] = row - 1 - couple[0]
-            couple[1] = couple[1]
-       # return self.sequence
+            couple[1] = couple[1] 
+        if show == True:
+            print("Mirrored all Xs!")
+            print(self.sequence)
     
-    def mirrorYAll(self, row):
+    def mirrorYAll(self, row, show=False):
         for couple in self.sequence:
             couple[0] = couple[0]
             couple[1] = row - 1 - couple[1]
-       # return self.sequence
         
-    def mirrorAll(self, row):
+        if show == True:
+            print("Mirrored all Ys!")
+            print(self.sequence)
+
+    def mirrorAll(self, row, show=False):
         for couple in self.sequence:
             couple[0] = row - 1 - couple[0]
             couple[1] = row - 1 - couple[1]
-       # return self.sequence
+        if show == True:
+            print("Mirrored all!")
+            print(self.sequence)
     
-    def reverse(self):
+    def reverse(self, show=False):
+        '''
+        Reverses the sequence.
+        '''
         self.sequence = self.sequence[::-1]
-       # return self.sequence
+        if show == True:
+            print("Reversed!")
+            print(self.sequence)
+        
 
-    def swapXYAll(self):
-         # Not Tested
-        self.sequence = [(t[1], t[0]) for t in self.sequence]
-        pass
+    def swapXYAll(self, show=False):
+         # Returns tuples instead of lists, why?
+        for couple in self.sequence:
+            x = couple[0]
+            y = couple[1]
+            couple[0] = y
+            couple[1] = x
+        if show == True:
+            print("Swapped all XYs!")
+            print(self.sequence)
 
-    def moveAll(self, x=0, y=0):
+    def moveAll(self, x=0, y=0, show=False):
          # Not Tested
         for couple in self.sequence:
             couple[0] = couple[0] + x
             couple[1] = couple[1] + y
+        if show == True:
+            print("Moved all!")
+            print(self.sequence)
 
-    def shuffle(self):
-         # Not Tested
+    def shuffle(self, show=False):
         random.shuffle(self.sequence)
+        if show == True:
+            print("Shuffled!")
+            print(self.sequence)
     
     def reset(self):
 
@@ -213,12 +237,10 @@ YO YO YO YO YO YO YO YO YO YO YO
             position = [self.cell_x * couple[0], self.cell_y * couple[1]]
             self.scaled_sequence.append(position)
     
-    def testPattern(self, output="", length = 1, offset=0.1):
-        '''
-        Won't work with doubleSpiral,
-        '''
+    def compositeTest(self, cell_duration = 1, offset=0.1,fps=30):
+        
         # Not tested
-        duration = offset * length
+        duration = offset * cell_duration
         start = 0.0
         clip = ColorClip(size=self.cell_size, color=(0,255,0), duration=duration)
         final_score = []
@@ -229,10 +251,9 @@ YO YO YO YO YO YO YO YO YO YO YO
             start += offset
 
         finalvideo = CompositeVideoClip(final_score,self.video_resolution)
-        finalvideo.fps= 30
+        finalvideo.fps=fps
 
-        finalvideo.write_videofile(output)
-
+        return finalvideo
 
 
 
@@ -303,7 +324,7 @@ def Shuffle(n):
 
 
 def Karo(n):
-     # Not Tested
+     # not working
     seq = Grid(x=n//2-1, y=0, addToList=False, direction=7)
     
     if n % 2 == 0:
@@ -331,14 +352,14 @@ def Karo(n):
         
 def Z(n=5, corners = 3):
      # Not Tested
-    seq = Grid(x=0,y=0,addToList=True,direction=5)
+    seq = Grid(x=0,y=0,addToList=True, direction=5)
 
     for i in range(corners):
         if i % 4 == 0 or i % 4 == 1:
             seq.turn(3, n - 1)
         if i % 4 == 2 or i % 4 == 3: 
             seq.turn(5, n - 1)
-
+   
     return seq
 
 def Snake(n, repeat=1):
