@@ -1,5 +1,5 @@
 # Rumba
-## A personal framework which consists of several class and function definitions to generate and manipulate 2 dimentional grid patterns for algorithmic video composition.
+## MoviePy script which consists of several class and function definitions to generate and manipulate 2 dimentional grid patterns for algorithmic video composition.
 
 
 ## TODO:
